@@ -19,11 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    private final UserDetailsServiceImpl userDetailsService;
-
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+    private UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public JwtRequestFilter jwtRequestFilter() {
@@ -45,10 +41,6 @@ public class SecurityConfig {
                 )
                 .headers(headers -> headers
                         .httpStrictTransportSecurity(hsts -> hsts.disable())
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/auth/logout")
-                        .logoutSuccessUrl("/auth/login?logout").permitAll()
                 );
 
         return http.build();
@@ -64,3 +56,5 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
+
+
