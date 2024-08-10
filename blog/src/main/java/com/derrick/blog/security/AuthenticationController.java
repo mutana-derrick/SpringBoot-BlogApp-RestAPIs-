@@ -1,5 +1,7 @@
-package com.derrick.blog.user;
+package com.derrick.blog.security;
 
+import com.derrick.blog.user.User;
+import com.derrick.blog.user.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
