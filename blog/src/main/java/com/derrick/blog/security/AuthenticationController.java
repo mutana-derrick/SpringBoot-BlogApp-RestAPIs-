@@ -4,6 +4,10 @@ import com.derrick.blog.user.User;
 import com.derrick.blog.user.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +22,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Authentication", description = "Authentication management APIs")
 public class AuthenticationController {
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -33,6 +38,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Register a new user", description = "Registers a new user by saving their details in the database. Ensures that the username is unique.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User registered successfully"),
+            @ApiResponse(responseCode = "400", description = "Username is already taken")
+    })
     public String registerUser(@RequestBody User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
             return "Username is already taken!";
@@ -43,6 +53,11 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Authenticate a user", description = "Authenticates a user and generates a JWT token for access.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Authentication successful, JWT token issued"),
+            @ApiResponse(responseCode = "401", description = "Authentication failed")
+    })
     public ResponseEntity<?> authenticateUser(@RequestBody User user) {
         try {
             Authentication authentication = authenticationManager.authenticate(
